@@ -3,87 +3,87 @@
 ######################################
 # In this code, Q and q mean question
 ######################################
-class Input_Error(Exception):
-    # Creates a custom error
+class User_Input_Error(Exception):
+    # Allows custom error messages
     pass
-def Empty_Check(value):
-    # Throws an error on a empty input
+def Check_For_Empty(value):
+    # Checks if Input is empty
     if not value:
-        raise Input_Error("EMPTY INPUTS ARE NOT ALLOWED")
+        raise User_Input_Error("EMPTY INPUTS ARE NOT ALLOWED")
 ######################################
-def Choice_Q():
+def En_or_Decrypt():
     while True:
         try:
-            choiceQ = input("\nChoose one: Encrypt[1] | Decrypt[2]").strip()
-            if choiceQ not in ["1", "2"]:
-                raise Input_Error("ENTER NUMBER 1 OR 2")
-            return choiceQ
-        except Input_Error as e:
+            enOrDecrypt = input("Choose one: Encrypt[1] | Decrypt[2]").strip()
+            if enOrDecrypt not in ['1','2']:
+                raise User_Input_Error("ENTER NUMBERS 1 OR 2")
+            return enOrDecrypt 
+        except User_Input_Error as e:
             print(f"| {e}")
 ######################################
-def Direction_Q(isEncrypting):
+def Direction_Question(Encrypting):
     while True:
-        try: 
-            directionQ = "Enter a positive direction: " if isEncrypting else "Enter a negative direction: "
-            direction = int(input(directionQ))
+        try:
+            directionQuestion = "Enter a positive direction: " if Encrypting else "Enter a negative direction: "
+            direction = int(input(directionQuestion)).strip()
 
-            if (isEncrypting and direction <= 0) or (not isEncrypting and direction >= 0):
-                raise Input_Error("INVALID DIRECTION | DIRECTION MUST BE POSITIVE FOR ENCRYPTION AND NEGATIVE FOR DECRYPTION")
-            return direction
+            if (Encrypting and direction <= 0) or (not Encrypting and direction >= 0):
+                raise User_Input_Error("INVALID DIRECTION | DIRECTION MUST BE POSITIVE FOR ENCRYPTION AND NEGATIVE FOR DECRYPTION")
+            return direction 
         except ValueError:
             print("| Invalid number value")
-        except Input_Error as e:
+        except User_Input_Error as e:
             print(f"| {e}")
 ######################################
-def Cipher(text, key, direction):
-    customAlphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnÑñOoPpQqRrSsTtUuVvWwXxYyZzÁáÉéÍíÓóÚúÜü1234567890,./;'[]=-)(*&^%$#@!<>?:{}+_"
-    keyIndex = 0
-    finalText= ''
+def Cipher(userText, userKey, userDirection):
+    customAlphabet= ""
+    keyIndex = 0 
+    finalText = ""
 
-    for eachCharacter in text: 
-        if eachCharacter not in customAlphabet:
-            finalText += eachCharacter # Allows for unkown characters to not be altered and just inserted into the finalText 
-
+    for eachChar in userText:
+        if eachChar not in customAlphabet:
+            finalText += eachChar # Allows for unkown characters to not be altered and just inserted into the finalText 
         else:
-            keyCharacter = key[keyIndex % len(key)] # Ensures that a valid index is always selected
-            keyIndex += 1 # Scrolls through every index
+            keyCharcter = key[keyIndex% len(key)] # Ensures that a valid index is always selected
+            keyIndex += 1 # Rotates through every letter in the key
 
-            keyInt = customAlphabet.index(keyCharacter) # Selects the position of keyCharacter in customAlphabet as an int 
+            keyInt = customAlphabet.index(keyCharcter) # Selects the position of the current letter of key according to the customAlphabet as an int
 
-            textInt = customAlphabet.find(eachCharacter)
+                            charInt = customAlphabet.find(eachChar)# Selects the position of the current letter of usrText according to the customAlphabet as an int
 
-            offset = (textInt + keyInt * direction) % len(customAlphabet) 
+            offset = (textInt + keyInt * direction) % len(customAlphabet)
 
             finalText += customAlphabet[offset]
 
     return finalText
 ######################################
 def Main():
-    try: 
-        qChoice = Choice_Q()
-        isEncrypting = qChoice == "1"
+    try:
+        questionOne = En_or_Decrypt()
+        Encrypting = questionOne == "1"
 
-        qKey = input("Enter your key: ").strip()
-        Empty_Check(qKey)# Check if empty
+        questionTwo = input("Enter your key: ").strip()
+        Check_For_Empty(questionTwo)# Checks for empty Inputs
 
-        qDirection = Direction_Q(isEncrypting)
+        questionThree = Direction_Question(Encrypting)
 
-        qText = input("Enter text: ").strip()
-        Empty_Check(qText)
+        questionFour = input("Enter text: ").strip()
+        Check_For_Empty(questionFour)
 
+        finalResult = Cipher(questionFour, questionTwo, questionThree)
 
-        Final_Result = Cipher(qText, qKey, qDirection)
-
-        EorD = "ENCRYPTED" if isEncrypting else "DECRYPTED" 
-        print(f"{EorD}-RESULT:\n {Final_Result}")
-    except Input_Error as e:
+        EncryptionOrDecryption = "ENCRYPTED" if Encrypting else ("DECRYPTED")
+        print(f"{EncryptionOrDecryption}-RESULT:\n {finalResult}")
+    except User_Input_Error as e: 
         print(f"|| {e}")
     except KeyboardInterrupt:
         print("\nPROCESS ENDED BY USER")
     except Exception as e:
         print(f"||| {e}")
-
+######################################
 if __name__ == "__main__":
     Main()
 # This was placed so that if this file is used as a module or something like that, it wouldn't start the code on launch/automatically.
-
+    
+                                
+            
