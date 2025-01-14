@@ -1,8 +1,6 @@
 ######################################
 #      This code is free to use      # 
 ######################################
-# In this code, Q and q mean question
-######################################
 class User_Input_Error(Exception):
     # Allows custom error messages
     pass
